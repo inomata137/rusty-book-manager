@@ -1,7 +1,6 @@
 use std::net::{Ipv4Addr, SocketAddr};
 
 use adapter::database::connect_database_with;
-use anyhow::{Context, Error, Result};
 use api::route::{book::build_book_routers, health::build_health_check_routers};
 use axum::Router;
 use registry::AppRegistry;
@@ -18,12 +17,12 @@ use tracing::Level;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> anyhow::Result<()> {
     init_logger()?;
     bootstrap().await
 }
 
-fn init_logger() -> Result<()> {
+fn init_logger() -> anyhow::Result<()> {
     let log_level = match which() {
         Environment::Development => "debug",
         Environment::Production => "info",
@@ -44,7 +43,9 @@ fn init_logger() -> Result<()> {
     Ok(())
 }
 
-async fn bootstrap() -> Result<()> {
+async fn bootstrap() -> anyhow::Result<()> {
+    use anyhow::Context;
+
     let app_config = AppConfig::new()?;
     let pool = connect_database_with(&app_config.database);
 
@@ -80,5 +81,5 @@ async fn bootstrap() -> Result<()> {
                 "Unexpected error"
             )
         })
-        .map_err(Error::from)
+        .map_err(anyhow::Error::from)
 }
