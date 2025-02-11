@@ -64,7 +64,7 @@ pub async fn update_book(
     State(registry): State<AppRegistry>,
     Json(req): Json<UpdateBookRequest>,
 ) -> AppResult<StatusCode> {
-    req.validate(&())?;
+    req.validate()?;
 
     let update_book = UpdateBookRequestWithIds::new(book_id, user.id(), req);
 

@@ -35,7 +35,7 @@ impl BookRepository for BookRepositoryImpl {
         )
         .execute(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         Ok(())
     }
@@ -59,7 +59,7 @@ impl BookRepository for BookRepositoryImpl {
         )
         .fetch_all(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         let total = rows.first().map(|r| r.total).unwrap_or_default();
         let book_ids = rows.into_iter().map(|r| r.id).collect::<Vec<_>>();
@@ -84,7 +84,7 @@ impl BookRepository for BookRepositoryImpl {
         )
         .fetch_all(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         let items = rows.into_iter().map(Book::from).collect();
 
@@ -116,7 +116,7 @@ impl BookRepository for BookRepositoryImpl {
         )
         .fetch_optional(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         Ok(row.map(Book::from))
     }
@@ -142,7 +142,7 @@ impl BookRepository for BookRepositoryImpl {
         )
         .execute(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         if res.rows_affected() < 1 {
             return Err(AppError::EntityNotFound("specified book not found".into()));
@@ -162,7 +162,7 @@ impl BookRepository for BookRepositoryImpl {
         )
         .execute(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         if res.rows_affected() < 1 {
             return Err(AppError::EntityNotFound("specified book not found".into()));

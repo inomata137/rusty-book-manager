@@ -10,9 +10,12 @@ use shared::error::AppResult;
 
 use crate::{
     extractor::AuthorizedUser,
-    model::user::{
-        CreateUserRequest, UpdateUserPasswordRequest, UpdateUserPasswordRequestWithUserId,
-        UpdateUserRoleRequest, UpdateUserRoleRequestWithUserId, UserResponse, UsersResponse,
+    model::{
+        checkout::CheckoutsResponse,
+        user::{
+            CreateUserRequest, UpdateUserPasswordRequest, UpdateUserPasswordRequestWithUserId,
+            UpdateUserRoleRequest, UpdateUserRoleRequestWithUserId, UserResponse, UsersResponse,
+        },
     },
 };
 
@@ -25,7 +28,7 @@ pub async fn register_user(
         return Err(shared::error::AppError::ForbiddenOperation);
     }
 
-    req.validate(&())?;
+    req.validate()?;
 
     let registered_user = registry.user_repository().create(req.into()).await?;
 
@@ -91,7 +94,7 @@ pub async fn change_password(
     State(registry): State<AppRegistry>,
     Json(req): Json<UpdateUserPasswordRequest>,
 ) -> AppResult<StatusCode> {
-    req.validate(&())?;
+    req.validate()?;
 
     registry
         .user_repository()
@@ -99,4 +102,16 @@ pub async fn change_password(
         .await?;
 
     Ok(StatusCode::OK)
+}
+
+pub async fn get_checkouts(
+    user: AuthorizedUser,
+    State(registry): State<AppRegistry>,
+) -> AppResult<Json<CheckoutsResponse>> {
+    registry
+        .checkout_repository()
+        .find_unreturned_by_user_id(user.id())
+        .await
+        .map(CheckoutsResponse::from)
+        .map(Json)
 }

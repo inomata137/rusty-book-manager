@@ -41,7 +41,7 @@ impl UserRepository for UserRepositoryImpl {
         )
         .fetch_optional(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
         match row {
             Some(r) => Ok(Some(User::try_from(r)?)),
             None => Ok(None),
@@ -66,7 +66,7 @@ impl UserRepository for UserRepositoryImpl {
         )
         .fetch_all(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?
+        .map_err(AppError::SpecificOperationError)?
         .into_iter()
         .filter_map(|row| User::try_from(row).ok())
         .collect();
@@ -92,7 +92,7 @@ impl UserRepository for UserRepositoryImpl {
         )
         .execute(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         if res.rows_affected() < 1 {
             return Err(AppError::NoRowsAffectedError(
@@ -119,7 +119,7 @@ impl UserRepository for UserRepositoryImpl {
         )
         .fetch_one(&mut *tx)
         .await
-        .map_err(AppError::SprcificOperationError)?
+        .map_err(AppError::SpecificOperationError)?
         .password_hash;
 
         verify_password(&event.current_password, &original_password_hash)?;
@@ -134,7 +134,7 @@ impl UserRepository for UserRepositoryImpl {
         )
         .execute(&mut *tx)
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         tx.commit().await.map_err(AppError::TransactionError)?;
 
@@ -153,7 +153,7 @@ impl UserRepository for UserRepositoryImpl {
         )
         .execute(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         if res.rows_affected() < 1 {
             return Err(AppError::NoRowsAffectedError(
@@ -173,7 +173,7 @@ impl UserRepository for UserRepositoryImpl {
         )
         .execute(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         if res.rows_affected() < 1 {
             return Err(AppError::NoRowsAffectedError(

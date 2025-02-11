@@ -50,7 +50,7 @@ impl AuthRepository for AuthRepositoryImpl {
         )
         .fetch_one(self.db.inner_ref())
         .await
-        .map_err(AppError::SprcificOperationError)?;
+        .map_err(AppError::SpecificOperationError)?;
 
         let valid = bcrypt::verify(password, &user_item.password_hash)?;
 
