@@ -13,7 +13,9 @@ use shared::{
 };
 use tokio::net::TcpListener;
 use tower_http::{
-    cors::{self, CorsLayer}, trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer}, LatencyUnit
+    cors::{self, CorsLayer},
+    trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer},
+    LatencyUnit,
 };
 use tracing::Level;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
@@ -48,12 +50,7 @@ fn init_logger() -> anyhow::Result<()> {
 fn cors() -> CorsLayer {
     CorsLayer::new()
         .allow_headers(cors::Any)
-        .allow_methods([
-            Method::GET,
-            Method::POST,
-            Method::PUT,
-            Method::DELETE,
-        ])
+        .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
         .allow_origin(cors::Any)
 }
 
