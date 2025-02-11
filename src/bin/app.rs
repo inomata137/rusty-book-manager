@@ -5,7 +5,7 @@ use std::{
 
 use adapter::{database::connect_database_with, redis::RedisClient};
 use api::route::{auth, v1};
-use axum::Router;
+use axum::{http::Method, Router};
 use registry::AppRegistry;
 use shared::{
     config::AppConfig,
@@ -13,8 +13,7 @@ use shared::{
 };
 use tokio::net::TcpListener;
 use tower_http::{
-    trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer},
-    LatencyUnit,
+    cors::{self, CorsLayer}, trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer}, LatencyUnit
 };
 use tracing::Level;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
@@ -46,6 +45,18 @@ fn init_logger() -> anyhow::Result<()> {
     Ok(())
 }
 
+fn cors() -> CorsLayer {
+    CorsLayer::new()
+        .allow_headers(cors::Any)
+        .allow_methods([
+            Method::GET,
+            Method::POST,
+            Method::PUT,
+            Method::DELETE,
+        ])
+        .allow_origin(cors::Any)
+}
+
 async fn bootstrap() -> anyhow::Result<()> {
     use anyhow::Context;
 
@@ -58,6 +69,7 @@ async fn bootstrap() -> anyhow::Result<()> {
     let app = Router::new()
         .merge(v1::routes())
         .merge(auth::routes())
+        .layer(cors())
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(DefaultMakeSpan::new().level(Level::INFO))
