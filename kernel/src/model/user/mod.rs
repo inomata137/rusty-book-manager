@@ -1,3 +1,5 @@
+use serde::Serialize;
+
 use super::{id::UserId, role::Role};
 
 pub mod event;
@@ -9,7 +11,7 @@ pub struct User {
     pub role: Role,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct BookOwner {
     pub id: UserId,
     pub name: String,

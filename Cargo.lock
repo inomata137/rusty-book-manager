@@ -16,7 +16,6 @@ dependencies = [
  "secrecy",
  "shared",
  "sqlx",
- "uuid",
 ]
 
 [[package]]
@@ -107,7 +106,6 @@ dependencies = [
  "tower 0.4.13",
  "tracing",
  "utoipa",
- "uuid",
 ]
 
 [[package]]
