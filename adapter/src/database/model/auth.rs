@@ -1,7 +1,4 @@
-use kernel::model::{
-    auth::{event::CreateToken, AccessToken},
-    id::UserId,
-};
+use kernel::model::{auth::AccessToken, id::UserId};
 use shared::error::{AppError, AppResult};
 
 use crate::redis::model::{RedisKey, RedisValue};
@@ -14,27 +11,29 @@ pub struct UserItem {
 pub struct AuthorizationKey(String);
 pub struct AuthorizedUserId(UserId);
 
-pub fn from(event: CreateToken) -> (AuthorizationKey, AuthorizedUserId) {
+pub fn from(
+    event: kernel::model::auth::event::CreateToken,
+) -> (AuthorizationKey, AuthorizedUserId) {
     (
         AuthorizationKey(event.access_token),
         AuthorizedUserId(event.user_id),
     )
 }
 
-impl From<AuthorizationKey> for AccessToken {
+impl From<AuthorizationKey> for kernel::model::auth::AccessToken {
     fn from(value: AuthorizationKey) -> Self {
         AccessToken(value.0)
     }
 }
 
-impl From<AccessToken> for AuthorizationKey {
-    fn from(value: AccessToken) -> Self {
+impl From<kernel::model::auth::AccessToken> for AuthorizationKey {
+    fn from(value: kernel::model::auth::AccessToken) -> Self {
         AuthorizationKey(value.0)
     }
 }
 
-impl From<&AccessToken> for AuthorizationKey {
-    fn from(value: &AccessToken) -> Self {
+impl From<&kernel::model::auth::AccessToken> for AuthorizationKey {
+    fn from(value: &kernel::model::auth::AccessToken) -> Self {
         AuthorizationKey(value.0.to_string())
     }
 }

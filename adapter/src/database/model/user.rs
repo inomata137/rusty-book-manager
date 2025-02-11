@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use chrono::{DateTime, Utc};
-use kernel::model::{id::UserId, role::Role, user::User};
+use kernel::model::{id::UserId, role::Role};
 use shared::error::AppError;
 
 pub struct UserRow {
@@ -13,10 +13,10 @@ pub struct UserRow {
     pub updated_at: DateTime<Utc>,
 }
 
-impl TryFrom<UserRow> for User {
+impl TryFrom<UserRow> for kernel::model::user::User {
     type Error = AppError;
 
-    fn try_from(value: UserRow) -> Result<Self, Self::Error> {
+    fn try_from(value: UserRow) -> std::result::Result<Self, Self::Error> {
         let UserRow {
             user_id,
             name,
@@ -24,7 +24,7 @@ impl TryFrom<UserRow> for User {
             role_name,
             ..
         } = value;
-        Ok(User {
+        Ok(Self {
             id: user_id,
             name,
             email,

@@ -1,4 +1,3 @@
-use kernel::model::book::{event::CreateBook, Book};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -11,7 +10,7 @@ pub struct CreateBookRequest {
     pub description: String,
 }
 
-impl From<CreateBookRequest> for CreateBook {
+impl From<CreateBookRequest> for kernel::model::book::event::CreateBook {
     fn from(value: CreateBookRequest) -> Self {
         let CreateBookRequest {
             title,
@@ -38,9 +37,9 @@ pub struct BookResponse {
     pub description: String,
 }
 
-impl From<Book> for BookResponse {
-    fn from(value: Book) -> Self {
-        let Book {
+impl From<kernel::model::book::Book> for BookResponse {
+    fn from(value: kernel::model::book::Book) -> Self {
+        let kernel::model::book::Book {
             id,
             title,
             author,

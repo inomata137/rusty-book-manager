@@ -1,4 +1,3 @@
-use kernel::model::book::Book;
 use uuid::Uuid;
 
 pub struct BookRow {
@@ -9,7 +8,7 @@ pub struct BookRow {
     pub description: String,
 }
 
-impl From<BookRow> for Book {
+impl From<BookRow> for kernel::model::book::Book {
     fn from(value: BookRow) -> Self {
         let BookRow {
             book_id,
