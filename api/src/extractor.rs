@@ -1,4 +1,4 @@
-use axum::{async_trait, extract::FromRequestParts, http::request::Parts, RequestPartsExt};
+use axum::{extract::FromRequestParts, http::request::Parts, RequestPartsExt};
 use axum_extra::{
     headers::{authorization::Bearer, Authorization},
     TypedHeader,
@@ -22,7 +22,6 @@ impl AuthorizedUser {
     }
 }
 
-#[async_trait]
 impl FromRequestParts<AppRegistry> for AuthorizedUser {
     type Rejection = AppError;
 
